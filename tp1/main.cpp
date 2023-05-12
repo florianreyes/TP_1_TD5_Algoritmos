@@ -16,5 +16,7 @@ int main(int argc, char **argv)
 
     solver.solve();
 
+    std::cout << solver.getObjectiveValue()<<std::endl;
+
     return 0;
 }
