@@ -18,22 +18,22 @@ void GreedySolver::setInstance(TaxiAssignmentInstance &instance)
 void GreedySolver::solve()
 {
     // definimos cantidad de pasajeros para iterar
-    int n_pasajeros = instance.n;
+    int n_pasajeros = _instance.n;
     TaxiAssignmentSolution solucion(n_pasajeros);
     // agarrar cada pasajero
     // buscar el taxi con menor distancia
     // asignar ese taxi a ese pasajero
     // guardar en la variable _solution la solucion
-    vector<bool> taxi_usado(n_pasajeros, false);
+    std::vector<bool> taxi_usado(n_pasajeros, false);
     for (int j = 0; j < n_pasajeros; j++)
     {
         double menor_distancia = INFINITY;
         int mejor_taxi = -1;
         for (int i = 0; i < n_pasajeros; i++)
         {
-            if (!taxi_usado && this->instance.dist[i][j] < menor_distancia)
+            if (!taxi_usado[i] && this->_instance.dist[i][j] < menor_distancia)
             {
-                menor_distiancia = this->instance.dist[i][j];
+                menor_distancia = this->_instance.dist[i][j];
                 mejor_taxi = i;
             }
         }

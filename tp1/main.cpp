@@ -3,8 +3,8 @@
 #include "checker.h"
 #include "greedy_solver.h"
 
-
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
     std::string filename = "input/small_1.csv";
 
     TaxiAssignmentInstance instance(filename);
