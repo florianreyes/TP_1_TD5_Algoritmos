@@ -13,10 +13,10 @@ int main(int argc, char **argv)
     TaxiAssignmentSolution solution(instance.n);
 
     GreedySolver solver(instance);
- 
+
     solver.solve();
 
-    std::cout << solver.getSolution() <<std::endl;
+    std::cout << solver.getSolution() << std::endl;
 
     TaxiAssignmentChecker checker;
     std::cout << checker.checkFeasibility(instance, solver.getSolution()) << std::endl;
