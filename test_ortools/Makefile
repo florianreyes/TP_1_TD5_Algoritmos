@@ -1,10 +1,10 @@
 CC = g++
 CFLAGS = -std=c++17
-INCDIRS =<path_to_ortools>/include/
+INCDIRS = <path_to_ortools>/include/
 LIBDIRS = <path_to_ortools>/lib/
-SRC = taxi_assignment_instance.cpp taxi_assignment_solution.cpp checker.cpp greedy_solver.cpp taxi_assignment_batching_solver.cpp main.cpp
+SRC = test_flow.cpp
 OBJ = $(SRC:.cpp=.o)
-EXEC = taxi_batching
+EXEC = test_flow
 
 all: $(EXEC)
 

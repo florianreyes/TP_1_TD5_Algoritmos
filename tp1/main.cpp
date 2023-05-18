@@ -18,5 +18,8 @@ int main(int argc, char **argv)
 
     std::cout << solver.getSolution() <<std::endl;
 
+    TaxiAssignmentChecker checker;
+    std::cout << checker.checkFeasibility(instance, solver.getSolution()) << std::endl;
+
     return 0;
 }

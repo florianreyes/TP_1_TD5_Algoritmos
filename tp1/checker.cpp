@@ -1,15 +1,12 @@
 #include "checker.h"
 
-TaxiAssignmentChecker::TaxiAssignmentChecker() :_feasibility_status(std::vector<bool>(3,false)) {}
+TaxiAssignmentChecker::TaxiAssignmentChecker(){}//_feasibility_status(std::vector<bool>(3,false)) 
 
 bool TaxiAssignmentChecker::checkFeasibility(const TaxiAssignmentInstance &instance, const TaxiAssignmentSolution &solution) {
-    bool ret = false;
-
-
-    return ret;
+    return _checkValuesInRange(instance, solution) && _checkPaxUnique(instance, solution) && _checkTaxiUnique(instance, solution);
 }
 
-bool _checkValuesInRange(const TaxiAssignmentInstance &instance, const TaxiAssignmentSolution &solution){
+bool TaxiAssignmentChecker::_checkValuesInRange(const TaxiAssignmentInstance &instance, const TaxiAssignmentSolution &solution){
     for (int i = 0; i < instance.n; i++)
     {
         if(solution.getAssignedPax(i) >= instance.n || solution.getAssignedTaxi(i) >= instance.n){
@@ -20,7 +17,7 @@ bool _checkValuesInRange(const TaxiAssignmentInstance &instance, const TaxiAssig
     return true;
 }
 
-bool _checkPaxUnique(const TaxiAssignmentInstance &instance, const TaxiAssignmentSolution &solution){
+bool TaxiAssignmentChecker::_checkPaxUnique(const TaxiAssignmentInstance &instance, const TaxiAssignmentSolution &solution){
     for (int i = 0; i < instance.n; i++)
     {
         for (int j = 0; j < instance.n; j++)
@@ -33,7 +30,7 @@ bool _checkPaxUnique(const TaxiAssignmentInstance &instance, const TaxiAssignmen
     }
     return true;
 }
-bool _checkTaxiUnique(const TaxiAssignmentInstance &instance, const TaxiAssignmentSolution &solution){
+bool TaxiAssignmentChecker::_checkTaxiUnique(const TaxiAssignmentInstance &instance, const TaxiAssignmentSolution &solution){
     for (int i = 0; i < instance.n; i++)
     {
         for (int j = 0; j < instance.n; j++)
