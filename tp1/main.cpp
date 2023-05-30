@@ -2,24 +2,47 @@
 #include "taxi_assignment_solution.h"
 #include "checker.h"
 #include "greedy_solver.h"
+#include "min_cost_flow_solver.h"
+#include <cmath>
+
+bool writeToCsv(std::string filename, std::string zb, std::string zg, std::string gap, std::string fileInput)
+{
+    std::ofstream myfile;
+    myfile.open(filename, std::ios_base::app);
+    myfile << zb << "," << zg << "," << gap << "," << fileInput << std::endl;
+    myfile.close();
+    return true;
+};
 
 int main(int argc, char **argv)
 {
-    std::string filename = "input/small_1.csv";
+    std::vector<std::string> names = {"small_0.csv", "small_1.csv", "small_2.csv", "small_3.csv", "small_4.csv", "small_5.csv", "small_6.csv", "small_7.csv", "small_8.csv", "small_9.csv", "medium_0.csv", "medium_1.csv", "medium_2.csv", "medium_3.csv", "medium_4.csv", "medium_5.csv", "medium_6.csv", "medium_7.csv", "medium_8.csv", "medium_9.csv", "large_0.csv", "large_1.csv", "large_2.csv", "large_3.csv", "large_4.csv", "large_5.csv", "large_6.csv", "large_7.csv", "large_8.csv", "large_9.csv", "xl_0.csv", "xl_1.csv", "xl_2.csv", "xl_3.csv", "xl_4.csv", "xl_5.csv", "xl_6.csv", "xl_7.csv", "xl_8.csv", "xl_9.csv"};
 
-    TaxiAssignmentInstance instance(filename);
-    std::cout << filename << std::endl;
+    std::cout << "Improvement of batching over greedy, Filename" << std::endl;
+    bool result = writeToCsv("greedy_vs_batching.csv", "zb", "zg", "gap", "filename");
+    for (auto elem : names)
+    {
 
-    TaxiAssignmentSolution solution(instance.n);
+        std::string filename = "input/" + elem;
 
-    GreedySolver solver(instance);
+        TaxiAssignmentInstance instance(filename);
+        // std::cout << filename << std::endl;
 
-    solver.solve();
+        TaxiAssignmentSolution solution(instance.n);
 
-    std::cout << solver.getSolution() << std::endl;
+        GreedySolver solver_1(instance);
 
-    TaxiAssignmentChecker checker;
-    std::cout << checker.checkFeasibility(instance, solver.getSolution()) << std::endl;
+        MinCostFlowSolver solver_2(instance);
 
+        solver_1.solve();
+        solver_2.solve();
+
+        double zg = solver_1.getObjectiveValue();
+        double zb = solver_2.getObjectiveValue();
+
+        double gap_greedy = (zg - zb) / zg;
+
+        bool result = writeToCsv("greedy_vs_batching.csv", std::to_string(zb), std::to_string(zg), std::to_string(gap_greedy), elem);
+    };
     return 0;
 }

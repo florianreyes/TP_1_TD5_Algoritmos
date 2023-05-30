@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -std=c++17
-INCDIRS = <path_to_ortools>/include/
-LIBDIRS = <path_to_ortools>/lib/
+INCDIRS = /Users/usuario/Desktop/DITELLA/TD5/TP_1_TD5_Algoritmos/or-tools/include/
+LIBDIRS = /Users/usuario/Desktop/DITELLA/TD5/TP_1_TD5_Algoritmos/or-tools/lib/
 SRC = test_flow.cpp
 OBJ = $(SRC:.cpp=.o)
 EXEC = test_flow

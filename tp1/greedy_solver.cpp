@@ -1,6 +1,5 @@
 #include "greedy_solver.h"
 
-
 GreedySolver::GreedySolver() {}
 
 GreedySolver::GreedySolver(TaxiAssignmentInstance &instance)
@@ -20,9 +19,9 @@ void GreedySolver::solve()
 {
     // definimos cantidad de pasajeros para iterar
     int n_pasajeros = _instance.n;
-    //instaciamos la solucion
+    // instaciamos la solucion
     TaxiAssignmentSolution solucion(n_pasajeros);
-    //comenzamos el cronometro
+    // comenzamos el cronometro
     auto start = std::chrono::high_resolution_clock::now();
     for (int j = 0; j < n_pasajeros; j++)
     {
@@ -37,9 +36,9 @@ void GreedySolver::solve()
                 mejor_taxi = i;
             }
         }
-        //asignamos el mejor taxi disponible para el pasajero
+        // asignamos el mejor taxi disponible para el pasajero
         solucion.assign(mejor_taxi, j);
-        //sumamos distancia al valor objetivo
+        // sumamos distancia al valor objetivo
         this->_objective_value += this->_instance.dist[mejor_taxi][j];
     }
     auto stop = std::chrono::high_resolution_clock::now();
@@ -47,7 +46,6 @@ void GreedySolver::solve()
     this->_solution_time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
     // guardamos en la variable _solution la solucion
     this->_solution = solucion;
-    
 }
 
 double GreedySolver::getObjectiveValue() const
