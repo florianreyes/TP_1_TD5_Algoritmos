@@ -2,6 +2,7 @@
 #include "taxi_assignment_solution.h"
 #include "checker.h"
 #include "greedy_solver.h"
+#include "taxi_assignment_batching_solver.h"
 #include "min_cost_flow_solver.h"
 #include <cmath>
 
@@ -32,7 +33,7 @@ int main(int argc, char **argv)
 
         GreedySolver solver_1(instance);
 
-        MinCostFlowSolver solver_2(instance);
+        BatchingSolver solver_2(instance);
 
         solver_1.solve();
         solver_2.solve();
@@ -42,7 +43,9 @@ int main(int argc, char **argv)
 
         double gap_greedy = (zg - zb) / zg;
 
-        bool result = writeToCsv("greedy_vs_batching.csv", std::to_string(zb), std::to_string(zg), std::to_string(gap_greedy), elem);
+        std::cout << gap_greedy << ", " << elem << std::endl;
+
+        // bool result = writeToCsv("greedy_vs_batching.csv", std::to_string(zb), std::to_string(zg), std::to_string(gap_greedy), elem);
     };
     return 0;
 }

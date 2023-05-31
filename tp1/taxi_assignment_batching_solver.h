@@ -8,10 +8,9 @@
 #include "taxi_assignment_solution.h"
 #include "ortools/graph/min_cost_flow.h"
 
-
 class BatchingSolver
 {
-	public:
+public:
         BatchingSolver();
         BatchingSolver(TaxiAssignmentInstance &instance);
 
@@ -22,12 +21,12 @@ class BatchingSolver
         TaxiAssignmentSolution getSolution() const;
         int getSolutionStatus() const;
         double getSolutionTime() const;
-        
-        
-	
-	private:
-        // Completar con lo que sea necesario.
- 
+
+private:
+        operations_research::SimpleMinCostFlow _min_cost_flow;
+
+        void _createMinCostFlowNetwork();
+        void _createSolutionInfo();
 
         // Instance, problem and results attributes
         TaxiAssignmentInstance _instance;
@@ -35,7 +34,6 @@ class BatchingSolver
         double _objective_value;
         int _solution_status;
         double _solution_time;
-
 };
 
 #endif
