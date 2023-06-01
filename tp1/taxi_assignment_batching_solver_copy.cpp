@@ -18,10 +18,9 @@ void BatchingSolver::setInstance(TaxiAssignmentInstance &instance)
 void BatchingSolver::solve()
 {
 
-    this->_createMinCostFlowNetwork();
-
-    // Obtain the solve the problem.
     auto start = std::chrono::high_resolution_clock::now();
+    this->_createMinCostFlowNetwork();
+    // Obtain the solve the problem.
     int status = this->_min_cost_flow.Solve();
     auto stop = std::chrono::high_resolution_clock::now();
 
@@ -36,7 +35,10 @@ void BatchingSolver::solve()
             if (flow == 0)
                 continue;
             int64_t cost = this->_min_cost_flow.Flow(i) * this->_min_cost_flow.UnitCost(i);
-            solucion.assign(this->_min_cost_flow.Tail(i), this->_min_cost_flow.Head(i) - _instance.n);
+            if (this->_min_cost_flow.Tail(i) != 0 && this->_min_cost_flow.Head(i) != 2 * _instance.n + 1)
+            {
+                solucion.assign(this->_min_cost_flow.Tail(i) - 1, this->_min_cost_flow.Head(i) - _instance.n - 1);
+            }
         }
     }
     else
@@ -76,29 +78,46 @@ void BatchingSolver::_createMinCostFlowNetwork()
 
     // Inicializar el grafo
     int n = this->_instance.n;
-    std::vector<int64_t> start_nodes(n * n, -1);
-    std::vector<int64_t> end_nodes(n * n, -1);
-    std::vector<int64_t> capacities(n * n, 1);
-    std::vector<int64_t> unit_costs(n * n, -1);
+    std::vector<int64_t> start_nodes((n * n) + (2 * n), -1);
+    std::vector<int64_t> end_nodes((n * n) + (2 * n), -1);
+    std::vector<int64_t> capacities((n * n) + (2 * n), 1);
+    std::vector<int64_t> unit_costs((n * n) + (2 * n), -1);
 
-    int cnt = 0;
-    for (int i = 0; i < this->_instance.n; i++)
+    // Inicializar los nodos fuente y sumidero
+
+    for (int i = 0; i < n; i++)
     {
-        for (int j = this->_instance.n; j < 2 * this->_instance.n; j++)
+        // El nodo s es el 0 y conecta con los taxis que van desde 1 hasta n (n nodos)
+        start_nodes[i] = 0;
+        // Cada end node son los taxis que van desde 1 hasta n (n nodos)
+        // Cada taxi ahora es tambien end node de un nuevo start node
+        end_nodes[i] = i + 1;
+        unit_costs[i] = 0;
+        // Cada nuevo start node son los pasajeros que van desde n+1 hasta 2n (n nodos)
+        // Los agregamos como nuevos start nodes al sumidero, luego, van desde n*n+n hasta n*n+2n (n nodos)
+        start_nodes[n * n + n + i] = n + i + 1;
+        // Agregamos el sumidero como end node
+        end_nodes[n * n + n + i] = 2 * n + 1;
+        unit_costs[n + i + 1] = 0;
+    }
+    int cnt = n;
+    for (int i = 1; i < n + 1; i++)
+    {
+        for (int j = n + 1; j < (2 * n) + 1; j++)
         {
             start_nodes[cnt] = i;
             end_nodes[cnt] = j;
-            unit_costs[cnt] = 10 * this->_instance.dist[i][j - n];
+            unit_costs[cnt] = 10 * this->_instance.dist[i - 1][j - n - 1];
             cnt++;
         }
     }
 
-    std::vector<int64_t> supplies(2 * n, 0);
-    for (int i = 0; i < this->_instance.n; i++)
-    {
-        supplies[i] = 1;
-        supplies[n + i] = -1;
-    }
+    int source = 0;
+    int sink = 2 * n + 1;
+
+    std::vector<int64_t> supplies(2 * n + 2, 0);
+    supplies[source] = n;
+    supplies[sink] = -n;
 
     for (int i = 0; i < start_nodes.size(); ++i)
     {
