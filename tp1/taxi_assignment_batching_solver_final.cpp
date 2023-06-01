@@ -17,11 +17,13 @@ void BatchingSolver::setInstance(TaxiAssignmentInstance &instance)
 
 void BatchingSolver::solve()
 {
-
     auto start = std::chrono::high_resolution_clock::now();
+    
+    //  creo el grafo de min cost flow
     this->_createMinCostFlowNetwork();
-    // Obtain the solve the problem.
+    // resuelvo el problema de min cost flow
     int status = this->_min_cost_flow.Solve();
+
     auto stop = std::chrono::high_resolution_clock::now();
 
     TaxiAssignmentSolution solucion(_instance.n);
@@ -48,8 +50,11 @@ void BatchingSolver::solve()
     }
     // guardamos en la variable _solution_time el tiempo de ejecucion de asignacion de taxis a pasajeros
     this->_solution_time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+    // obtenemos el minimo costo de la solucion del problema de min cost flow
     this->_objective_value = this->_min_cost_flow.OptimalCost() / 10.0;
+    // guardamos el status de la solucion, es decir si fue optima o no
     this->_solution_status = status;
+    // guardamos la solucion obtenida del problema de min cost flow
     this->_solution = solucion;
 }
 
@@ -84,7 +89,6 @@ void BatchingSolver::_createMinCostFlowNetwork()
     std::vector<int64_t> unit_costs((n * n) + (2 * n), -1);
 
     // Inicializar los nodos fuente y sumidero
-
     for (int i = 0; i < n; i++)
     {
         // El nodo s es el 0 y conecta con los taxis que van desde 1 hasta n (n nodos)
@@ -100,6 +104,8 @@ void BatchingSolver::_createMinCostFlowNetwork()
         end_nodes[n * n + n + i] = 2 * n + 1;
         unit_costs[n + i + 1] = 0;
     }
+
+    // Inicializar los nodos intermedios (los que conectan taxis con pasajeros)
     int cnt = n;
     for (int i = 1; i < n + 1; i++)
     {
@@ -114,13 +120,15 @@ void BatchingSolver::_createMinCostFlowNetwork()
 
     int source = 0;
     int sink = 2 * n + 1;
-
+    // Inicializar los supplies de los nodos
     std::vector<int64_t> supplies(2 * n + 2, 0);
     supplies[source] = n;
     supplies[sink] = -n;
 
+
     for (int i = 0; i < start_nodes.size(); ++i)
     {
+        // Agregar un arco con capacidad y costo unitario
         int arc = this->_min_cost_flow.AddArcWithCapacityAndUnitCost(start_nodes[i], end_nodes[i], capacities[i], unit_costs[i]);
         if (arc != i)
             LOG(FATAL) << "Internal error";
@@ -128,6 +136,7 @@ void BatchingSolver::_createMinCostFlowNetwork()
 
     for (int i = 0; i < supplies.size(); ++i)
     {
+        // Establecer el valor de supply para el nodo i
         this->_min_cost_flow.SetNodeSupply(i, supplies[i]);
     }
 }

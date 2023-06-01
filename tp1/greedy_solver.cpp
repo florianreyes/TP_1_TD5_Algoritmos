@@ -30,6 +30,7 @@ void GreedySolver::solve()
         int mejor_taxi = -1;
         for (int i = 0; i < n_pasajeros; i++)
         {
+            // Verificamos si el pasajero i no tiene un taxi asignado y si la distancia es menor a la distancia mínima actual
             if (!solucion.isTaxiAssigned(i) && this->_instance.dist[i][j] < menor_distancia)
             {
                 menor_distancia = this->_instance.dist[i][j];
@@ -42,9 +43,9 @@ void GreedySolver::solve()
         this->_objective_value += this->_instance.dist[mejor_taxi][j];
     }
     auto stop = std::chrono::high_resolution_clock::now();
-    // guardamos en la variable _solution_time el tiempo de ejecucion de asignacion de taxis a pasajeros
+    // guardamos el tiempo de ejecucion de asignacion de taxis a pasajeros
     this->_solution_time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
-    // guardamos en la variable _solution la solucion
+    // guardamos la solucion
     this->_solution = solucion;
 }
 
