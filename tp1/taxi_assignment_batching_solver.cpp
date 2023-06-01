@@ -18,10 +18,10 @@ void BatchingSolver::setInstance(TaxiAssignmentInstance &instance)
 void BatchingSolver::solve()
 {
 
+    auto start = std::chrono::high_resolution_clock::now();
     this->_createMinCostFlowNetwork();
 
     // Obtain the solve the problem.
-    auto start = std::chrono::high_resolution_clock::now();
     int status = this->_min_cost_flow.Solve();
     auto stop = std::chrono::high_resolution_clock::now();
 

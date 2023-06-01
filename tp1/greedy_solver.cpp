@@ -19,10 +19,10 @@ void GreedySolver::solve()
 {
     // definimos cantidad de pasajeros para iterar
     int n_pasajeros = _instance.n;
+    auto start = std::chrono::high_resolution_clock::now();
     // instaciamos la solucion
     TaxiAssignmentSolution solucion(n_pasajeros);
     // comenzamos el cronometro
-    auto start = std::chrono::high_resolution_clock::now();
     for (int j = 0; j < n_pasajeros; j++)
     {
         // buscamos el taxi con menor distancia

@@ -45,8 +45,6 @@ int main(int argc, char **argv)
 
         double gap_greedy = (zg - zb) / zg;
 
-        std::cout << solver_2.getSolution() << std::endl;
-
         bool result = writeToCsv("greedy_vs_batching.csv", std::to_string(zb), std::to_string(zg), std::to_string(gap_greedy), std::to_string(tb), std::to_string(tg), elem);
     };
     return 0;
