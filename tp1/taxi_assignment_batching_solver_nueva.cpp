@@ -1,8 +1,8 @@
-#include "taxi_assignment_batching_solver.h"
+#include "taxi_assignment_batching_solver_mod.h"
 
-BatchingSolver::BatchingSolver() {}
+BatchingSolverMod::BatchingSolverMod() {}
 
-BatchingSolver::BatchingSolver(TaxiAssignmentInstance &instance)
+BatchingSolverMod::BatchingSolverMod(TaxiAssignmentInstance &instance)
 {
     this->_instance = instance;
     this->_objective_value = 0;
@@ -10,12 +10,12 @@ BatchingSolver::BatchingSolver(TaxiAssignmentInstance &instance)
     this->_solution_time = 0;
 }
 
-void BatchingSolver::setInstance(TaxiAssignmentInstance &instance)
+void BatchingSolverMod::setInstance(TaxiAssignmentInstance &instance)
 {
     this->_instance = instance;
 }
 
-void BatchingSolver::solve()
+void BatchingSolverMod::solve()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -51,34 +51,38 @@ void BatchingSolver::solve()
     // guardamos en la variable _solution_time el tiempo de ejecucion de asignacion de taxis a pasajeros
     this->_solution_time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
     // obtenemos el minimo costo de la solucion del problema de min cost flow
-    this->_objective_value = this->_min_cost_flow.OptimalCost() / 10.0;
+    this->_objective_value = 0;
+    for (int i = 0; i < _instance.n; i++)
+    {
+        this->_objective_value += this->_instance.dist[i][solucion.getAssignedPax(i)];
+    }
     // guardamos el status de la solucion, es decir si fue optima o no
     this->_solution_status = status;
     // guardamos la solucion obtenida del problema de min cost flow
     this->_solution = solucion;
 }
 
-double BatchingSolver::getObjectiveValue() const
+double BatchingSolverMod::getObjectiveValue() const
 {
     return this->_objective_value;
 }
 
-TaxiAssignmentSolution BatchingSolver::getSolution() const
+TaxiAssignmentSolution BatchingSolverMod::getSolution() const
 {
     return this->_solution;
 }
 
-int BatchingSolver::getSolutionStatus() const
+int BatchingSolverMod::getSolutionStatus() const
 {
     return this->_solution_status;
 }
 
-double BatchingSolver::getSolutionTime() const
+double BatchingSolverMod::getSolutionTime() const
 {
     return this->_solution_time;
 }
 
-void BatchingSolver::_createMinCostFlowNetwork()
+void BatchingSolverMod::_createMinCostFlowNetwork()
 {
 
     // Inicializar el grafo

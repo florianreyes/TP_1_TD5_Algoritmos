@@ -3,14 +3,15 @@
 #include "checker.h"
 #include "greedy_solver.h"
 #include "taxi_assignment_batching_solver.h"
+#include "taxi_assignment_batching_solver_mod.h"
 #include "min_cost_flow_solver.h"
 #include <cmath>
 
-bool writeToCsv(std::string filename, std::string zb, std::string zg, std::string gap, std::string tb, std::string tg, std::string fileInput)
+bool writeToCsv(std::string filename, std::string zb, std::string zg, std::string zb_nueva, std::string gap, std::string gap_nueva, std::string tb, std::string tg, std::string fileInput)
 {
     std::ofstream myfile;
     myfile.open(filename, std::ios_base::app);
-    myfile << zb << "," << zg << "," << gap << "," << tb << "," << tg << "," << fileInput << std::endl;
+    myfile << zb << "," << zg << "," << zb_nueva << "," << gap << "," << gap_nueva << "," << tb << "," << tg << "," << fileInput << std::endl;
     myfile.close();
     return true;
 };
@@ -20,7 +21,7 @@ int main(int argc, char **argv)
     std::vector<std::string> names = {"small_0.csv", "small_1.csv", "small_2.csv", "small_3.csv", "small_4.csv", "small_5.csv", "small_6.csv", "small_7.csv", "small_8.csv", "small_9.csv", "medium_0.csv", "medium_1.csv", "medium_2.csv", "medium_3.csv", "medium_4.csv", "medium_5.csv", "medium_6.csv", "medium_7.csv", "medium_8.csv", "medium_9.csv", "large_0.csv", "large_1.csv", "large_2.csv", "large_3.csv", "large_4.csv", "large_5.csv", "large_6.csv", "large_7.csv", "large_8.csv", "large_9.csv", "xl_0.csv", "xl_1.csv", "xl_2.csv", "xl_3.csv", "xl_4.csv", "xl_5.csv", "xl_6.csv", "xl_7.csv", "xl_8.csv", "xl_9.csv"};
 
     std::cout << "Corriendo" << std::endl;
-    bool result = writeToCsv("greedy_vs_batching.csv", "zb", "zg", "gap", "time_batching", "time_greedy", "filename");
+    bool result = writeToCsv("greedy_vs_batching.csv", "zb", "zg", "zb_nueva", "gap", "gap_nueva", "time_batching", "time_greedy", "filename");
     for (auto elem : names)
     {
         std::string filename = "input/" + elem;
@@ -34,23 +35,23 @@ int main(int argc, char **argv)
 
         BatchingSolver solver_2(instance);
 
+        BatchingSolverMod solver_3(instance);
+
         solver_1.solve();
         solver_2.solve();
+        solver_3.solve();
 
         double zg = solver_1.getObjectiveValue();
         double zb = solver_2.getObjectiveValue();
+        double zb_nueva = solver_3.getObjectiveValue();
 
         double tg = solver_1.getSolutionTime();
         double tb = solver_2.getSolutionTime();
 
         double gap_greedy = (zg - zb) / zg;
+        double gap_nueva = (zb_nueva - zb) / zb_nueva;
 
-        if (filename == "input/test.csv")
-        {
-            std::cout << solver_2.getSolution() << std::endl;
-        }
-
-        bool result = writeToCsv("greedy_vs_batching.csv", std::to_string(zb), std::to_string(zg), std::to_string(gap_greedy), std::to_string(tb), std::to_string(tg), elem);
+        bool result = writeToCsv("greedy_vs_batching.csv", std::to_string(zb), std::to_string(zg), std::to_string(zb_nueva), std::to_string(gap_greedy), std::to_string(gap_nueva), std::to_string(tb), std::to_string(tg), elem);
     };
     return 0;
 }
