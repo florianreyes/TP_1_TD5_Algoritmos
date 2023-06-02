@@ -18,7 +18,7 @@ void BatchingSolver::setInstance(TaxiAssignmentInstance &instance)
 void BatchingSolver::solve()
 {
     auto start = std::chrono::high_resolution_clock::now();
-    
+
     //  creo el grafo de min cost flow
     this->_createMinCostFlowNetwork();
     // resuelvo el problema de min cost flow
@@ -124,7 +124,6 @@ void BatchingSolver::_createMinCostFlowNetwork()
     std::vector<int64_t> supplies(2 * n + 2, 0);
     supplies[source] = n;
     supplies[sink] = -n;
-
 
     for (int i = 0; i < start_nodes.size(); ++i)
     {
